@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "framepy"
+version = "0.1.0"
+description = "Python function to download photos from Dropbox and automatically resize and process them."
+authors = ["Matthew Berk <matthew@msberk.net>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.6.0"
+rope = "^0.18.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
