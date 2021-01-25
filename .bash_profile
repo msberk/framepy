@@ -4,4 +4,4 @@ echo "Sleeping 10 seconds to allow network to come up..."
 sleep 10
 git -C ~/framepy pull --rebase
 chmod +x ~/framepy/*
-~/framepy/frame.py
+~/framepy/frame.py /path/to/frame/pictures/on/dropbox
