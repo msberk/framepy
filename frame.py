@@ -3,6 +3,7 @@ import argparse
 import subprocess
 import os
 import shutil
+from glob import glob
 
 
 def main(args):
@@ -48,9 +49,10 @@ def parseCliArgs():
 
 
 def displayImages(targetFolder):
-    subprocess.run(['fbi', '--noverbose', '--random', '--autozoom',
-                    '--timeout', '10', os.path.join(targetFolder, '*.jpeg')],
-                   shell=True)
+    fbiCall = ['fbi', '--noverbose', '--random', '--autozoom',
+               '--timeout', '10']
+    fbiArgs = glob(os.path.join(targetFolder, '*.jpeg'))
+    subprocess.run(fbiCall + fbiArgs)
 
 
 def processAllImages(localFolder, targetFolder, size):
