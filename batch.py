@@ -76,7 +76,10 @@ def processImage(file, size):
 
 
 def renameFile(originalName):
-    return originalName.replace(' ', '_')
+    return originalName.replace(' ', '_')\
+                       .replace('.jpg', '.jpeg')\
+                       .replace('.JPG', '.jpeg')\
+                       .replace('.JPEG', '.jpeg')
 
 
 def downloadFiles(pictureFolder, baseFolder):
