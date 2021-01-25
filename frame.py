@@ -26,7 +26,7 @@ def main(args):
     removeMissingFiles(os.listdir(localFolder), targetFolder, renameFile)
 
     # Show images.
-    displayImages(targetFolder)
+    displayImages(targetFolder, args.timeout, args.randomize)
 
 
 # Parse arguments.
@@ -38,20 +38,27 @@ def parseCliArgs():
     parser.add_argument('--baseDir', '-b', type=str,
                         default=os.path.join(os.environ["HOME"],
                                              'framepy_working'),
-                        help="Base directory to work out of.")
+                        help="Base directory to work out of")
     parser.add_argument('--outDir', '-o', type=str,
                         default='ProcessedPhotos',
-                        help="Out photo directory for processed photos.")
+                        help="Out photo directory for processed photos")
     parser.add_argument('--vert', '-v', type=int, default=1080,
                         help='Vertical height of display screen.')
     parser.add_argument('--hori', '-z', type=int, default=1920,
-                        help='Horizontal width of display screen.')
+                        help='Horizontal width of display screen')
+    parser.add_argument('--timeout', '-t', type=str, default='20',
+                        help='Timeout before switching photos')
+    parser.add_argument('--randomize', '-r', action='store_true',
+                        help='Randomize image output')
     return parser.parse_args()
 
 
-def displayImages(targetFolder):
-    fbiCall = ['fbi', '--noverbose', '--random', '--autozoom',
-               '--timeout', '10']
+def displayImages(targetFolder, timeout, randomize):
+    fbiCall = ['fbi', '--noverbose', '--autozoom',
+               '--timeout', timeout]
+    if randomize:
+        fbiCall.append('--random')
+
     fbiArgs = glob(os.path.join(targetFolder, '*.jpeg'))
     subprocess.run(fbiCall + fbiArgs)
 
