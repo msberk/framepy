@@ -7,19 +7,22 @@ import shutil
 
 def main(args):
     # Define folder locations.
-    localFolder = os.path.join(args.baseFolder, args.pictureFolder)
-    targetFolder = os.path.join(args.baseFolder, args.outFolder)
+    localFolder = os.path.join(args.baseDir, os.path.split(args.pictureDir)[1])
+    targetFolder = os.path.join(args.baseDir, args.outDir)
+    if not os.path.isdir(targetFolder):
+        os.mkdir(targetFolder)
 
     # Define screen size into tuple.
     size = (args.hori, args.vert)
 
     # Sync with remote.
-    remoteFileList = parseDUlist(args.pictureFolder)
+    remoteFileList = parseDUlist(args.pictureDir)
     removeMissingFiles(remoteFileList, localFolder)
-    downloadFiles(args.pictureFolder, args.baseFolder)
+    downloadFiles(args.pictureDir, args.baseDir)
 
     # Process images.
     processAllImages(localFolder, targetFolder, size)
+    removeMissingFiles(os.listdir(localFolder), targetFolder, renameFile)
 
     # Show images.
     displayImages(targetFolder)
@@ -29,17 +32,17 @@ def main(args):
 def parseCliArgs():
     parser = argparse.ArgumentParser(description="Download and "
                                                  "process frame images.")
-    parser.add_argument('pictureFolder', type=str,
-                        help="Location on dropbox of the photo folder")
-    parser.add_argument('--baseFolder', '-b', type=str,
+    parser.add_argument('pictureDir', type=str,
+                        help="Location on dropbox of the photo directory")
+    parser.add_argument('--baseDir', '-b', type=str,
                         default=os.environ["HOME"],
-                        help="Base folder to work out of.")
-    parser.add_argument('--outFolder', '-o', type=str,
+                        help="Base directory to work out of.")
+    parser.add_argument('--outDir', '-o', type=str,
                         default='ProcessedPhotos',
                         help="Out photo directory for processed photos.")
     parser.add_argument('--vert', '-v', type=int, default=1080,
                         help='Vertical height of display screen.')
-    parser.add_argument('--hori', '-h', type=int, default=1920,
+    parser.add_argument('--hori', '-z', type=int, default=1920,
                         help='Horizontal width of display screen.')
     return parser.parse_args()
 
@@ -55,7 +58,7 @@ def processAllImages(localFolder, targetFolder, size):
     for localName in localFileList:
         localFile = os.path.join(localFolder, localName)
 
-        targetName = renameFile(localFile)
+        targetName = renameFile(localName)
         targetFile = os.path.join(targetFolder, targetName)
 
         if not os.path.isfile(targetFile):
@@ -81,20 +84,29 @@ def downloadFiles(pictureFolder, baseFolder):
                     'download', pictureFolder, baseFolder])
 
 
-def removeMissingFiles(remoteFileList, localFolder):
-    localFileList = os.listdir(localFolder)
-    missingFiles = (localFile for localFile in localFileList
-                    if localFile in remoteFileList)
-    for missingFile in missingFiles:
-        print('Removing ' + missingFile)
-        os.remove(os.path.join(localFolder, missingFile))
+def removeMissingFiles(srcFileList, destDir, renameFcn=None):
+    if os.path.isdir(destDir):
+        destFileList = os.listdir(destDir)
+
+        # Rename the source file list to match the target if a
+        # renaming function was used, to ensure matching.
+        if renameFcn is not None:
+            srcFileList = [renameFcn(file) for file in srcFileList]
+
+        missingFiles = [destFile for destFile in destFileList
+                        if destFile not in srcFileList]
+
+        for missingFile in missingFiles:
+            print('Removing ' + missingFile)
+            os.remove(os.path.join(destDir, missingFile))
 
 
 def parseDUlist(pictureFolder):
     result = subprocess.run(['dropbox_uploader.sh', 'list', pictureFolder],
-                            capture_output=True)
+                            capture_output=True, encoding='utf8')
     lineList = result.stdout.split('\n')
-    return (line.split(' ')[2] for line in lineList if line.find('[F]'))
+    return [' '.join(line.split(' ')[3:]).strip() for line in lineList
+            if line.find('[F]') == 1]
 
 
 if __name__ == "__main__":
