@@ -36,7 +36,8 @@ def parseCliArgs():
     parser.add_argument('pictureDir', type=str,
                         help="Location on dropbox of the photo directory")
     parser.add_argument('--baseDir', '-b', type=str,
-                        default=os.path.joint(os.environ["HOME"], 'framepy_working'),
+                        default=os.path.join(os.environ["HOME"],
+                                             'framepy_working'),
                         help="Base directory to work out of.")
     parser.add_argument('--outDir', '-o', type=str,
                         default='ProcessedPhotos',
