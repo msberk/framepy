@@ -61,7 +61,7 @@ def processAllImages(localFolder, targetFolder, size):
         targetName = renameFile(localName)
         targetFile = os.path.join(targetFolder, targetName)
 
-        if not os.path.isfile(targetFile):
+        if not os.path.isfile(targetFile) and '.jpeg' in targetName:
             shutil.copy(localFile, targetFile)
             processImage(targetFile, size)
 
