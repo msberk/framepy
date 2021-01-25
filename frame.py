@@ -49,7 +49,8 @@ def parseCliArgs():
 
 def displayImages(targetFolder):
     subprocess.run(['fbi', '--noverbose', '--random', '--autozoom',
-                    '--timeout', '10', targetFolder + '*.jpeg'], shell=True)
+                    '--timeout', '10', os.path.join(targetFolder, '*.jpeg')],
+                   shell=True)
 
 
 def processAllImages(localFolder, targetFolder, size):
