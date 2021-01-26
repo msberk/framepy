@@ -8,10 +8,14 @@ from glob import glob
 
 def main(args):
     # Define folder locations.
+    if not os.path.isdir(args.baseDir):
+        os.mkdir(args.baseDir)
+
     localFolder = os.path.join(args.baseDir, os.path.split(args.pictureDir)[1])
     targetFolder = os.path.join(args.baseDir, args.outDir)
     if not os.path.isdir(targetFolder):
         os.mkdir(targetFolder)
+
 
     # Define screen size into tuple.
     size = (args.hori, args.vert)
