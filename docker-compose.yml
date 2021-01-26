@@ -6,7 +6,7 @@ services:
     user: $UID:$GID
     working_dir: $HOME
     volumes:
-      - ./frameData:./frameData
+      - ./frameData:/home/pi/frameData
       - ./frame.py:/usr/bin/frame.py
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
@@ -22,7 +22,7 @@ services:
     user: $UID:$GID
     working_dir: $HOME
     volumes:
-      - ./frameData:./frameData
+      - ./frameData:/home/pi/frameData
       - ./frame.py:/usr/bin/frame.py
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
