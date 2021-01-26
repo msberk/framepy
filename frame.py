@@ -22,7 +22,10 @@ def main(args):
     # Sync with remote.
     remoteFileList = parseDUlist(args.pictureDir, args.configFile)
     downloadFiles(args.pictureDir, args.baseDir, args.configFile)
-    removeMissingFiles(remoteFileList, localFolder)
+    # Only remove files if a remote file list was found, else
+    # there are probably network issues.
+    if len(remoteFileList) != 0:
+        removeMissingFiles(remoteFileList, localFolder)
 
     # Process images.
     processAllImages(localFolder, targetFolder, size)
