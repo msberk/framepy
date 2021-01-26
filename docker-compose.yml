@@ -3,6 +3,7 @@ services:
   framepy:
     build: .
     image: framepy:0.1.0
+    user: $uid:$gid
     volumes:
       - ./frameData:/frameData
       - ./frame.py:/usr/bin/frame.py
@@ -14,6 +15,7 @@ services:
   setup:
     build: .
     image: framepy:0.1.0
+    user: $uid:$gid
     volumes:
       - ./frameData:/frameData
       - ./frame.py:/usr/bin/frame.py
