@@ -8,6 +8,8 @@ services:
       - ./frame.py:/usr/bin/frame.py
     devices:
       - /dev/fb0:/dev/fb0
+      - /dev/tty:/dev/tty
+      - /dev/tty0:/dev/tty0
     # Set to running user. Copy .env-example to .env to use default pi user.
     user: "${USER}"
     entrypoint: frame.py -f /frameData/dropbox_uploader.config --baseDir /frameData
