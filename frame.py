@@ -16,14 +16,13 @@ def main(args):
     if not os.path.isdir(targetFolder):
         os.mkdir(targetFolder)
 
-
     # Define screen size into tuple.
     size = (args.hori, args.vert)
 
     # Sync with remote.
     remoteFileList = parseDUlist(args.pictureDir, args.configFile)
-    removeMissingFiles(remoteFileList, localFolder)
     downloadFiles(args.pictureDir, args.baseDir, args.configFile)
+    removeMissingFiles(remoteFileList, localFolder)
 
     # Process images.
     processAllImages(localFolder, targetFolder, size)
