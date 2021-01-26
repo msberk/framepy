@@ -6,13 +6,13 @@ services:
     user: $UID:$GID
     working_dir: $HOME
     volumes:
-      - ./frameData:/frameData
+      - ./frameData:./frameData
       - ./frame.py:/usr/bin/frame.py
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
       - /etc/shadow:/etc/shadow:ro
     #privileged: true
-    entrypoint: frame.py -f /frameData/dropbox_uploader.config --baseDir /frameData
+    entrypoint: frame.py -f ./frameData/dropbox_uploader.config --baseDir /frameData
     tty: true
     stdin_open: true
 
@@ -22,11 +22,11 @@ services:
     user: $UID:$GID
     working_dir: $HOME
     volumes:
-      - ./frameData:/frameData
+      - ./frameData:./frameData
       - ./frame.py:/usr/bin/frame.py
       - /etc/group:/etc/group:ro
       - /etc/passwd:/etc/passwd:ro
       - /etc/shadow:/etc/shadow:ro
-    command: dropbox_uploader.sh -f /frameData/dropbox_uploader.config
+    command: dropbox_uploader.sh -f ./frameData/dropbox_uploader.config
     tty: true
     stdin_open: true
