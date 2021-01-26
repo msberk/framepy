@@ -17,9 +17,9 @@ def main(args):
     size = (args.hori, args.vert)
 
     # Sync with remote.
-    remoteFileList = parseDUlist(args.pictureDir)
+    remoteFileList = parseDUlist(args.pictureDir, args.configFile)
     removeMissingFiles(remoteFileList, localFolder)
-    downloadFiles(args.pictureDir, args.baseDir)
+    downloadFiles(args.pictureDir, args.baseDir, args.configFile)
 
     # Process images.
     processAllImages(localFolder, targetFolder, size)
@@ -50,6 +50,10 @@ def parseCliArgs():
                         help='Timeout before switching photos')
     parser.add_argument('--randomize', '-r', action='store_true',
                         help='Randomize image output')
+    parser.add_argument('--configFile', '-f',
+                        default=os.path.join(os.environ["HOME"],
+                                             '.dropbox_uploader'),
+                        help='Dropbox_uploader.sh config file.')
     return parser.parse_args()
 
 
@@ -93,9 +97,9 @@ def renameFile(originalName):
                        .replace('.JPEG', '.jpeg')
 
 
-def downloadFiles(pictureFolder, baseFolder):
-    subprocess.run(['dropbox_uploader.sh', '-s',
-                    'download', pictureFolder, baseFolder])
+def downloadFiles(pictureFolder, baseFolder, duConfigPath):
+    subprocess.run(['dropbox_uploader.sh', '-f', duConfigPath, 
+                    '-s', 'download', pictureFolder, baseFolder])
 
 
 def removeMissingFiles(srcFileList, destDir, renameFcn=None):
@@ -115,8 +119,9 @@ def removeMissingFiles(srcFileList, destDir, renameFcn=None):
             os.remove(os.path.join(destDir, missingFile))
 
 
-def parseDUlist(pictureFolder):
-    result = subprocess.run(['dropbox_uploader.sh', 'list', pictureFolder],
+def parseDUlist(pictureFolder, duConfigPath):
+    result = subprocess.run(['dropbox_uploader.sh', '-f', duConfigPath,
+                             'list', pictureFolder],
                             capture_output=True, encoding='utf8')
     lineList = result.stdout.split('\n')
     return [' '.join(line.split(' ')[3:]).strip() for line in lineList
