@@ -1,0 +1,7 @@
+.venv
+.env
+.vscode
+testphotos
+photos
+ProcessedPhotos
+frameData
