@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  framepy:
+    build: .
+    image: framepy:0.1.0
+    volumes:
+      - ./frameData:/frameData
+      - ./frame.py:/usr/bin/frame.py
+    #privileged: true
+    entrypoint: frame.py -f /frameData/dropbox_uploader.config --baseDir /frameData
+    tty: true
+    stdin_open: true
+
+  setup:
+    build: .
+    image: framepy:0.1.0
+    volumes:
+      - ./frameData:/frameData
+      - ./frame.py:/usr/bin/frame.py
+    command: dropbox_uploader.sh -f /frameData/dropbox_uploader.config
+    tty: true
+    stdin_open: true
